@@ -43,6 +43,7 @@ CLASS zcl_bc_time_util DEFINITION
         VALUE(rv_ts_timestamp) TYPE timestamp .
     "! <p class="shorttext synchronized" lang="en">Convert Timestamp Long to ISO</p>
     "!
+    "! Implictly this will be a UTC ISO Time as Timestamps are inherently always in UTC
     "! @parameter IM_TSL_TIMESTAMP | <p class="shorttext synchronized" lang="en">Timestamp Long</p>
     "! @parameter RV_ISO_TIMESTAMP | <p class="shorttext synchronized" lang="en">ISO TimeStamp</p>
     CLASS-METHODS convert_tsl_to_iso
@@ -50,6 +51,12 @@ CLASS zcl_bc_time_util DEFINITION
         !im_tsl_timestamp       TYPE timestampl
       RETURNING
         VALUE(rv_iso_timestamp) TYPE ty_iso_datetime .
+    "! <p class="shorttext synchronized" lang="en">Convert Date/Time to Timestamp</p>
+    "!
+    "! @parameter im_date | <p class="shorttext synchronized" lang="en">Date</p>
+    "! @parameter im_time | <p class="shorttext synchronized" lang="en">Time</p>
+    "! @parameter im_time_zone | <p class="shorttext synchronized" lang="en">Time Zone</p>
+    "! @parameter rv_time_stamp | <p class="shorttext synchronized" lang="en">Timestamp</p>
     CLASS-METHODS convert_date_time_to_ts
       IMPORTING
         !im_date             TYPE sydatum DEFAULT sy-datum
@@ -57,20 +64,37 @@ CLASS zcl_bc_time_util DEFINITION
         !im_time_zone        TYPE tznzone DEFAULT sy-zonlo
       RETURNING
         VALUE(rv_time_stamp) TYPE timestamp .
+    "! <p class="shorttext synchronized" lang="en">Get the System Time Zone</p>
+    "!
+    "! @parameter rv_time_zone | <p class="shorttext synchronized" lang="en">Time Zone</p>
     CLASS-METHODS get_system_time_zone
       RETURNING
         VALUE(rv_time_zone) TYPE tznzone .
+    "! <p class="shorttext synchronized" lang="en">Convert ISO Time (UTC) to Timestamp</p>
+    "! Converts a UTC ISO Time to a Timestamp
+    "! @parameter im_iso_time_stamp | <p class="shorttext synchronized" lang="en">ISO Timestamp</p>
+    "! @parameter rv_time_stamp | <p class="shorttext synchronized" lang="en">Timestamp</p>
     CLASS-METHODS convert_iso_to_ts
       IMPORTING
         !im_iso_time_stamp   TYPE ty_iso_datetime
       RETURNING
         VALUE(rv_time_stamp) TYPE timestamp .
+    "! <p class="shorttext synchronized" lang="en">Convert Timestamp to Date/Time/p>
+    "!
+    "! @parameter im_time_stamp | <p class="shorttext synchronized" lang="en">Timestamp</p>
+    "! @parameter im_time_zone | <p class="shorttext synchronized" lang="en">Timezone to convert timestamp to</p>
+    "! @parameter rv_date_time | <p class="shorttext synchronized" lang="en">Date/Time</p>
     CLASS-METHODS convert_ts_to_date_time
       IMPORTING
         !im_time_stamp      TYPE timestamp
-        !im_time_zone       TYPE tznzone
+        !im_time_zone       TYPE tznzone DEFAULT sy-zonlo
       RETURNING
         VALUE(rv_date_time) TYPE ty_date_time .
+    "! <p class="shorttext synchronized" lang="en">Get Timestamp Difference in Seconds</p>
+    "!
+    "! @parameter im_timestamp1 | <p class="shorttext synchronized" lang="en">Timestamp 1</p>
+    "! @parameter im_timestamp2 | <p class="shorttext synchronized" lang="en">Timestamp 2</p>
+    "! @parameter rv_difference | <p class="shorttext synchronized" lang="en">Time Difference in seconds</p>
     CLASS-METHODS get_ts_difference
       IMPORTING
         !im_timestamp1       TYPE timestamp
@@ -83,7 +107,7 @@ ENDCLASS.
 
 
 
-CLASS zcl_bc_time_util IMPLEMENTATION.
+CLASS ZCL_BC_TIME_UTIL IMPLEMENTATION.
 
 
   METHOD convert_date_time_to_ts.
